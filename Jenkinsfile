@@ -17,13 +17,12 @@ environment {
         }
         stage('SonarQube Analysis') {
             steps {
-                withSonarQubeEnv('sonarqube') {
+                withSonarQubeEnv('sonar-token') {
                     sh '''
                     sonar-scanner \
                     -Dsonar.projectKey=flask-app \
                     -Dsonar.sources=. \
-                    -Dsonar.host.url=http://http://172.20.243.147:9000 \
-                    -Dsonar.login=squ_8a6090dd278bd541ff22cdd5fb36a4a948b08018
+                    -Dsonar.host.url=http://172.20.243.147:9000
                     '''
                 }
             }
