@@ -11,10 +11,13 @@ environment {
             }
         }
         stage('OWASP Dependency Check') {
-            steps {
-                dependencyCheck additionalArguments: '--scan ./'
-            }
-        }
+    steps {
+        dependencyCheck(
+            odcInstallation: 'OWASP-DC',
+            additionalArguments: '--scan ./'
+        )
+    }
+}
         stage('SonarQube Analysis') {
             steps {
                 withSonarQubeEnv('sonar-token') {
@@ -38,11 +41,14 @@ environment {
             }
         }
         stage('Docker Push') {
-            steps {
-                withDockerRegistry([credentialsId: 'dockerhub']) {
-                    sh 'docker push $IMAGE_NAME:$BUILD_NUMBER'
-                }
-            }
+    steps {
+        withDockerRegistry(
+            credentialsId: 'dockerhub',
+            url: 'https://index.docker.io/v1/'
+        ) {
+            sh 'docker push $IMAGE_NAME:$BUILD_NUMBER'
         }
+    }
+}
     }
 }
