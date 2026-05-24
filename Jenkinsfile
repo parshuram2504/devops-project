@@ -19,17 +19,21 @@ environment {
     }
 }
         stage('SonarQube Analysis') {
-            steps {
-                withSonarQubeEnv('sonar-token') {
-                    sh '''
-                    sonar-scanner \
-                    -Dsonar.projectKey=flask-app \
-                    -Dsonar.sources=. \
-                    -Dsonar.host.url=http://172.20.243.147:9000
-                    '''
-                }
+    steps {
+        script {
+            def scannerHome = tool 'sonar-scanner'
+
+            withSonarQubeEnv('sonarqube') {
+                sh """
+                ${scannerHome}/bin/sonar-scanner \
+                -Dsonar.projectKey=flask-app \
+                -Dsonar.sources=. \
+                -Dsonar.host.url=http://172.20.243.147:9000
+                """
             }
         }
+    }
+}
         stage('Docker Build') {
             steps {
                 sh 'docker build -t $IMAGE_NAME:$BUILD_NUMBER .'
@@ -52,3 +56,4 @@ environment {
 }
     }
 }
+
