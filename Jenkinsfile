@@ -9,15 +9,15 @@ environment {
     stages {
         stage('Pull Code') {
             steps {
+                git branch: 'main',
+                url: 'https://github.com/parshuram2504/devops-project.git'
                 script {
-                    def result = sh(script: 'git log -1 --pretty=%B', returnStdout: true).trim()
-                    if (result.contains('[skip ci]')) {
+                    def commitMsg = sh(script: 'git log -1 --pretty=%B', returnStdout: true).trim()
+                    if (commitMsg.contains('[skip ci]')) {
                         currentBuild.result = 'NOT_BUILT'
                         error('Skipping CI - triggered by image tag update')
                     }
                 }
-                git branch: 'main',
-                url: 'https://github.com/parshuram2504/devops-project.git'
             }
         }
         stage('SonarQube Analysis') {
