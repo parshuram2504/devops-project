@@ -12,10 +12,10 @@ environment {
                 git branch: 'main',
                 url: 'https://github.com/parshuram2504/devops-project.git'
                 script {
-                    def commitMsg = sh(script: 'git log -1 --pretty=%B', returnStdout: true).trim()
-                    if (commitMsg.contains('[skip ci]')) {
+                    def changedFiles = sh(script: 'git diff --name-only HEAD~1 HEAD', returnStdout: true).trim()
+                    if (changedFiles == 'deployment.yaml') {
                         currentBuild.result = 'NOT_BUILT'
-                        error('Skipping CI - triggered by image tag update')
+                        error('Skipping CI - only deployment.yaml was changed')
                     }
                 }
             }
