@@ -1,11 +1,21 @@
 pipeline {
     agent any
+    options {
+        skipDefaultCheckout()
+    }
 environment {
         IMAGE_NAME = "parshuram2504/flask-devops"
     }
     stages {
         stage('Pull Code') {
             steps {
+                script {
+                    def result = sh(script: 'git log -1 --pretty=%B', returnStdout: true).trim()
+                    if (result.contains('[skip ci]')) {
+                        currentBuild.result = 'NOT_BUILT'
+                        error('Skipping CI - triggered by image tag update')
+                    }
+                }
                 git branch: 'main',
                 url: 'https://github.com/parshuram2504/devops-project.git'
             }
@@ -56,7 +66,7 @@ environment {
                         git config user.email "jenkins@ci.com"
                         git config user.name "Jenkins"
                         git add deployment.yaml
-                        git commit -m "Update image tag to $BUILD_NUMBER"
+                        git commit -m "Update image tag to $BUILD_NUMBER [skip ci]"
                         git push origin main
                     '''
                 }
