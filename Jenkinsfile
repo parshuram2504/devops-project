@@ -20,6 +20,7 @@ environment {
                 ${scannerHome}/bin/sonar-scanner \
                 -Dsonar.projectKey=flask-app \
                 -Dsonar.sources=. \
+                -Dsonar.python.version=3.11
                 -Dsonar.host.url=http://172.20.243.147:9000
                 """
             }
