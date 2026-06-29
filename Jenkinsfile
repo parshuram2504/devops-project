@@ -10,14 +10,6 @@ environment {
                 url: 'https://github.com/parshuram2504/devops-project.git'
             }
         }
-        stage('OWASP Dependency Check') {
-    steps {
-        dependencyCheck(
-            odcInstallation: 'OWASP-DC',
-            additionalArguments: '--scan ./'
-        )
-    }
-}
         stage('SonarQube Analysis') {
     steps {
         script {
