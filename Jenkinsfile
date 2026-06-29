@@ -46,6 +46,22 @@ environment {
         }
     }
 }
+        stage('Update deployment.yaml') {
+            steps {
+                script {
+                    sh "sed -i 's|image: $IMAGE_NAME:.*|image: $IMAGE_NAME:$BUILD_NUMBER|' deployment.yaml"
+                }
+                withCredentials([gitUsernamePassword(credentialsId: 'github', gitToolName: 'Default')]) {
+                    sh '''
+                        git config user.email "jenkins@ci.com"
+                        git config user.name "Jenkins"
+                        git add deployment.yaml
+                        git commit -m "Update image tag to $BUILD_NUMBER"
+                        git push origin main
+                    '''
+                }
+            }
+        }
     }
 }
 
