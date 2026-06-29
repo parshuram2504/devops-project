@@ -73,5 +73,10 @@ environment {
             }
         }
     }
+    post {
+        always {
+            cleanWs()
+        }
+    }
 }
 
