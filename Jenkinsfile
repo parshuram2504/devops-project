@@ -13,7 +13,7 @@ environment {
                 url: 'https://github.com/parshuram2504/devops-project.git'
                 script {
                     def changedFiles = sh(script: 'git diff --name-only HEAD~1 HEAD', returnStdout: true).trim()
-                    if (changedFiles == 'deployment.yaml') {
+                    if (changedFiles == 'manifests/deployment.yaml') {
                         currentBuild.result = 'NOT_BUILT'
                         error('Skipping CI - only deployment.yaml was changed')
                     }
@@ -59,14 +59,14 @@ environment {
         stage('Update deployment.yaml') {
             steps {
                 script {
-                    sh "sed -i 's|image: $IMAGE_NAME:.*|image: $IMAGE_NAME:$BUILD_NUMBER|' deployment.yaml"
+                    sh "sed -i 's|image: $IMAGE_NAME:.*|image: $IMAGE_NAME:$BUILD_NUMBER|' manifests/deployment.yaml"
                 }
                 withCredentials([gitUsernamePassword(credentialsId: 'github', gitToolName: 'Default')]) {
                     sh '''
                         git config user.email "jenkins@ci.com"
                         git config user.name "Jenkins"
-                        git add deployment.yaml
-                        git commit -m "Update image tag to $BUILD_NUMBER [skip ci]"
+                        git add manifests/deployment.yaml
+                        git commit -m "Update image tag to $BUILD_NUMBER"
                         git push origin main
                     '''
                 }
