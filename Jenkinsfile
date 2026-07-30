@@ -62,13 +62,13 @@ environment {
                     sh "sed -i 's|image: $IMAGE_NAME:.*|image: $IMAGE_NAME:$BUILD_NUMBER|' manifests/deployment.yaml"
                 }
                 withCredentials([gitUsernamePassword(credentialsId: 'github', gitToolName: 'Default')]) {
-                    sh '''
+                    sh """
                         git config user.email "jenkins@ci.com"
                         git config user.name "Jenkins"
                         git add manifests/deployment.yaml
-                        git commit -m "Update image tag to $BUILD_NUMBER"
+                        git commit -m "Update image tag to ${BUILD_NUMBER}"
                         git push origin main
-                    '''
+                    """
                 }
             }
         }

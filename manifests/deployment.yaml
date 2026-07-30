@@ -19,6 +19,6 @@ spec:
     spec:
       containers:
       - name: flask-app
-        image: parshuram2504/flask-devops:22
+        image: parshuram2504/flask-app:test
         ports:
         - containerPort: 5000
